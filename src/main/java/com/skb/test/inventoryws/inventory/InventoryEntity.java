@@ -3,6 +3,7 @@ package com.skb.test.inventoryws.inventory;
 import com.skb.test.inventoryws.manufacturer.ManufacturerEntity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Inventory")
@@ -16,7 +17,7 @@ public class InventoryEntity {
     private String name;
 
     @Column(name = "release_date")
-    private String releaseDate;
+    private LocalDateTime releaseDate;
 
     public InventoryEntity() {
     }
@@ -27,7 +28,7 @@ public class InventoryEntity {
             nullable = false)
     private ManufacturerEntity manufacturerEntity;
 
-    public InventoryEntity(String inventoryId, String name, String releaseDate, ManufacturerEntity manufacturerEntity) {
+    public InventoryEntity(String inventoryId, String name, LocalDateTime releaseDate, ManufacturerEntity manufacturerEntity) {
         this.inventoryId = inventoryId;
         this.name = name;
         this.releaseDate = releaseDate;
@@ -50,11 +51,11 @@ public class InventoryEntity {
         this.name = name;
     }
 
-    public String getReleaseDate() {
+    public LocalDateTime getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(LocalDateTime releaseDate) {
         this.releaseDate = releaseDate;
     }
 

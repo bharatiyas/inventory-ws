@@ -11,6 +11,6 @@ CREATE TABLE Manufacturer (
 CREATE TABLE Inventory (
       inventory_id  VARCHAR(100) PRIMARY KEY,
       name VARCHAR(50) NOT NULL,
-      release_date VARCHAR(45) NOT NULL,
+      release_date DATETIME NOT NULL,
       manufacturer_id VARCHAR(100) NOT NULL
 );
