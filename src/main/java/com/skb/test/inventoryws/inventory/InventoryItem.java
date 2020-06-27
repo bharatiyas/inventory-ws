@@ -1,25 +1,41 @@
 package com.skb.test.inventoryws.inventory;
 
 import com.skb.test.inventoryws.manufacturer.Manufacturer;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 public class InventoryItem {
 
     private String id;
+
+    @NotNull(message = "Inventory name must be between 1 and 50 characters")
+    @Size(min = 1, max = 50, message = "Inventory name must be between 1 and 50 characters")
     private String name;
-    private String releaseDate;
+
+    @NotNull
+    //@Size(min = 24, max = 24, message = "Please enter a release date in format: yyyy-MM-ddThh:mm:ss.SSSZ")
+    @DateTimeFormat(iso= DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-ddThh:mm:ss.SSSZ")
+    private LocalDateTime releaseDate;
+
+    @NotNull
+    @Valid
     private Manufacturer manufacturer;
 
     public InventoryItem() {
     }
 
-    public InventoryItem(String id, String name, String releaseDate, Manufacturer manufacturer) {
+    public InventoryItem(String id, String name, LocalDateTime releaseDate, Manufacturer manufacturer) {
         this.id = id;
         this.name = name;
         this.releaseDate = releaseDate;
         this.manufacturer = manufacturer;
     }
 
-    public InventoryItem(String name, String releaseDate, Manufacturer manufacturer) {
+    public InventoryItem(String name, LocalDateTime releaseDate, Manufacturer manufacturer) {
         this.name = name;
         this.releaseDate = releaseDate;
         this.manufacturer = manufacturer;
@@ -41,11 +57,11 @@ public class InventoryItem {
         this.name = name;
     }
 
-    public String getReleaseDate() {
+    public LocalDateTime getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(LocalDateTime releaseDate) {
         this.releaseDate = releaseDate;
     }
 

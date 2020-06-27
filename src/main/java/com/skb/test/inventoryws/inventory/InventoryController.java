@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public class InventoryController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<?> getInventory(@PathVariable String id,
+    public ResponseEntity<InventoryItem> getInventory(@PathVariable String id,
                                           @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
             throws InventoryNotFoundException, InventoryBadRequestException {
 
@@ -53,7 +54,7 @@ public class InventoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addInventory(@RequestBody InventoryItem inventoryItem,
+    public ResponseEntity<InventoryItem> addInventory(@Valid @RequestBody InventoryItem inventoryItem,
                                           @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
             throws InventoryAlreadyExistException {
 
