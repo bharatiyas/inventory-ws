@@ -2,10 +2,13 @@ package com.skb.test.inventoryws.converter;
 
 import com.skb.test.inventoryws.inventory.InventoryEntity;
 import com.skb.test.inventoryws.inventory.InventoryItem;
+import com.skb.test.inventoryws.util.LibraryApiUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
-public class InventoryConverter implements EntityToModelConverter<InventoryEntity, InventoryItem> {
+public class InventoryConverter implements Converter<InventoryEntity, InventoryItem> {
 
     private ManufacturerConverter manufacturerConverter;
 
@@ -14,8 +17,20 @@ public class InventoryConverter implements EntityToModelConverter<InventoryEntit
     }
 
     @Override
-    public InventoryItem convert(InventoryEntity entity) {
-        return new InventoryItem(entity.getInventoryId(), entity.getName(), entity.getName(),
-                manufacturerConverter.convert(entity.getManufacturerEntity()));
+    public InventoryItem convertEntityToModel(InventoryEntity entity) {
+        return new InventoryItem(entity.getInventoryId(), entity.getName(), entity.getReleaseDate(),
+                manufacturerConverter.convertEntityToModel(entity.getManufacturerEntity()));
+    }
+
+    @Override
+    public InventoryEntity convertModelToEntity(InventoryItem model) {
+
+        if(!LibraryApiUtils.doesStringValueExist(model.getId()))
+            return new InventoryEntity(UUID.randomUUID().toString(), model.getName(), model.getReleaseDate(),
+                    manufacturerConverter.convertModelToEntity(model.getManufacturer()));
+
+        else
+            return new InventoryEntity(model.getId(), model.getName(), model.getReleaseDate(),
+                    manufacturerConverter.convertModelToEntity(model.getManufacturer()));
     }
 }
