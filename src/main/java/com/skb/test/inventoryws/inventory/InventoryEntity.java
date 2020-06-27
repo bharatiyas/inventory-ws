@@ -27,12 +27,11 @@ public class InventoryEntity {
             nullable = false)
     private ManufacturerEntity manufacturerEntity;
 
-    public InventoryEntity(String inventoryId, String name, String releaseDate, ManufacturerEntity manufacturerEntity, ManufacturerEntity manufacturerEntity1) {
+    public InventoryEntity(String inventoryId, String name, String releaseDate, ManufacturerEntity manufacturerEntity) {
         this.inventoryId = inventoryId;
         this.name = name;
         this.releaseDate = releaseDate;
         this.manufacturerEntity = manufacturerEntity;
-        this.manufacturerEntity = manufacturerEntity1;
     }
 
     public String getInventoryId() {

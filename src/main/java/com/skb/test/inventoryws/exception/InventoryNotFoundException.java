@@ -1,10 +1,10 @@
 package com.skb.test.inventoryws.exception;
 
-public class InventoryResourceAlreadyExistException extends Exception {
+public class InventoryNotFoundException extends Exception {
 
     private String traceId;
 
-    public InventoryResourceAlreadyExistException(String traceId, String message) {
+    public InventoryNotFoundException(String traceId, String message) {
         super(message);
         this.traceId = traceId;
     }

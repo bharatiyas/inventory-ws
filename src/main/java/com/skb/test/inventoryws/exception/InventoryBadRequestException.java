@@ -1,10 +1,10 @@
 package com.skb.test.inventoryws.exception;
 
-public class InventoryResourceBadRequestException extends Exception {
+public class InventoryBadRequestException extends Exception {
 
     private String traceId;
 
-    public InventoryResourceBadRequestException(String traceId, String message) {
+    public InventoryBadRequestException(String traceId, String message) {
         super(message);
         this.traceId = traceId;
     }
