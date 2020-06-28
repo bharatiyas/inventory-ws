@@ -37,7 +37,7 @@ public class InventoryController {
             logger.debug("TraceId: {}, Added ", traceId);
         }
 
-        logger.debug("TraceId: {}, Returning response");
+        logger.debug("TraceId: {}, Returning response", traceId);
         return new ResponseEntity<>(inventoryService.getAllInventory(skip, limit, traceId), HttpStatus.OK);
     }
 
@@ -55,7 +55,7 @@ public class InventoryController {
         if(!InventoryWsUtils.doesStringValueExist(id)) {
             throw new InventoryBadRequestException(traceId, "Please provide a valid inventoryId");
         }
-        logger.debug("TraceId: {}, Returning response");
+        logger.debug("TraceId: {}, Returning response", traceId);
         return new ResponseEntity<>(inventoryService.getInventory(id.trim(), traceId), HttpStatus.OK);
     }
 
@@ -72,7 +72,7 @@ public class InventoryController {
 
         inventoryService.addInventoryItem(inventoryItem, traceId);
 
-        logger.debug("TraceId: {}, Returning response");
+        logger.debug("TraceId: {}, Returning response", traceId);
         return new ResponseEntity<>(inventoryItem, HttpStatus.CREATED);
     }
 }
