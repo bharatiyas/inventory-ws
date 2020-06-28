@@ -3,7 +3,7 @@ package com.skb.test.inventoryws.inventory;
 import com.skb.test.inventoryws.exception.InventoryAlreadyExistException;
 import com.skb.test.inventoryws.exception.InventoryBadRequestException;
 import com.skb.test.inventoryws.exception.InventoryNotFoundException;
-import com.skb.test.inventoryws.util.LibraryApiUtils;
+import com.skb.test.inventoryws.util.InventoryWsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,11 +31,14 @@ public class InventoryController {
                                                                @RequestParam(defaultValue = "10") Integer limit,
                                                                @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId) {
 
-        if(!LibraryApiUtils.doesStringValueExist(traceId)) {
+        logger.debug("TraceId: {}, Request to get Inventories: skip = {}, limit = {}", traceId, skip, limit);
+        if(!InventoryWsUtils.doesStringValueExist(traceId)) {
             traceId = UUID.randomUUID().toString();
+            logger.debug("TraceId: {}, Added ", traceId);
         }
 
-        return new ResponseEntity<>(inventoryService.getAllInventory(skip, limit), HttpStatus.OK);
+        logger.debug("TraceId: {}, Returning response");
+        return new ResponseEntity<>(inventoryService.getAllInventory(skip, limit, traceId), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")
@@ -43,13 +46,16 @@ public class InventoryController {
                                           @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
             throws InventoryNotFoundException, InventoryBadRequestException {
 
-        if(!LibraryApiUtils.doesStringValueExist(traceId)) {
+        logger.debug("TraceId: {}, Request to get Inventory with Id: {}", traceId, id);
+        if(!InventoryWsUtils.doesStringValueExist(traceId)) {
             traceId = UUID.randomUUID().toString();
+            logger.debug("TraceId: {}, Added ", traceId);
         }
 
-        if(!LibraryApiUtils.doesStringValueExist(id)) {
+        if(!InventoryWsUtils.doesStringValueExist(id)) {
             throw new InventoryBadRequestException(traceId, "Please provide a valid inventoryId");
         }
+        logger.debug("TraceId: {}, Returning response");
         return new ResponseEntity<>(inventoryService.getInventory(id.trim(), traceId), HttpStatus.OK);
     }
 
@@ -59,14 +65,14 @@ public class InventoryController {
             throws InventoryAlreadyExistException {
 
         logger.debug("Request to add Inventory: {}", inventoryItem);
-        if(!LibraryApiUtils.doesStringValueExist(traceId)) {
+        if(!InventoryWsUtils.doesStringValueExist(traceId)) {
             traceId = UUID.randomUUID().toString();
+            logger.debug("TraceId: {}, Added ", traceId);
         }
 
-        logger.debug("Added TraceId: {}", traceId);
         inventoryService.addInventoryItem(inventoryItem, traceId);
 
-        logger.debug("Returning response for TraceId: {}", traceId);
+        logger.debug("TraceId: {}, Returning response");
         return new ResponseEntity<>(inventoryItem, HttpStatus.CREATED);
     }
 }

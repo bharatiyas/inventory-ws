@@ -1,7 +1,7 @@
 package com.skb.test.inventoryws.util;
 
 
-public class LibraryApiUtils {
+public class InventoryWsUtils {
 
 
     public static boolean doesStringValueExist(String str) {

@@ -1,6 +1,6 @@
 package com.skb.test.inventoryws.exception;
 
-import com.skb.test.inventoryws.util.LibraryApiUtils;
+import com.skb.test.inventoryws.util.InventoryWsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -49,7 +49,7 @@ public class InventoryControllerExceptionHandler extends ResponseEntityException
 
     private String getTraceId(WebRequest webRequest) {
         String traceId = webRequest.getHeader("Trace-Id");
-        if(!LibraryApiUtils.doesStringValueExist(traceId)) {
+        if(!InventoryWsUtils.doesStringValueExist(traceId)) {
             traceId = UUID.randomUUID().toString();
         }
 
