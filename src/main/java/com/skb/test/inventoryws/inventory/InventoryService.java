@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,12 +32,14 @@ public class InventoryService {
         this.inventoryConverter = inventoryConverter;
     }
 
-    public List<InventoryItem> getAllInventory(Integer skip, Integer limit) {
-        Pageable paging = PageRequest.of(skip, limit);
+    public List<InventoryItem> getAllInventory(Integer skip, Integer limit, String traceId) {
+        Pageable pageable = PageRequest.of(skip, limit);
 
-        Page<InventoryEntity> pagedResult = inventoryRepository.findAll(paging);
+        //Page<InventoryEntity> pagedResult = inventoryRepository.findAll(pageable);
+        List<InventoryEntity> pagedResult = inventoryRepository.findAll(pageable);
 
-        return pagedResult.getContent().stream()
+        logger.debug("TraceId: {}, Returning {} number inventory items", traceId, pagedResult.size());
+        return pagedResult.stream()
                 .map(pe -> inventoryConverter.convertEntityToModel(pe))
                 .collect(Collectors.toList());
     }
@@ -47,19 +48,19 @@ public class InventoryService {
 
         Optional<InventoryEntity> inventoryEntity = inventoryRepository.findByInventoryId(inventoryId);
         if(inventoryEntity.isPresent()) {
-
+            logger.debug("TraceId: {}, Returning Inventory with ID: {}", traceId, inventoryId);
             return inventoryConverter.convertEntityToModel(inventoryEntity.get());
         } else {
             throw new InventoryNotFoundException(traceId, "Inventory Id: " + inventoryId + " Not Found");
         }
     }
 
-    @Transactional
     public void addInventoryItem(InventoryItem inventoryItemToBeAdded, String traceId)
             throws InventoryAlreadyExistException {
 
-        logger.debug("TraceId: {}, Request to add Book: {}", traceId, inventoryItemToBeAdded);
+        logger.debug("TraceId: {}, Request to add Inventory to DB: {}", traceId, inventoryItemToBeAdded);
         InventoryEntity inventoryEntity = inventoryConverter.convertModelToEntity(inventoryItemToBeAdded);
+
         // Get the parent of the Book (Publisher is the parent). If not found throw an exception
         Manufacturer manufacturer = inventoryItemToBeAdded.getManufacturer();
         Optional<ManufacturerEntity> me = manufacturerRepository
@@ -73,12 +74,12 @@ public class InventoryService {
             Optional<InventoryEntity> ie =
                     inventoryRepository.findByNameAndManufacturerEntity(inventoryItemToBeAdded.getName(), me.get());
             if(ie.isPresent()) {
-                throw new InventoryAlreadyExistException(traceId, "Inventory with same name and same manufacturer aleardy exists");
+                throw new InventoryAlreadyExistException(traceId, "Inventory with same name and same manufacturer already exists");
             }
             inventoryEntity.setManufacturerEntity(me.get());
         }
         inventoryRepository.save(inventoryEntity);
         inventoryItemToBeAdded.setId(inventoryEntity.getInventoryId());
-        logger.debug("TraceId: {}, Inventory Item added.", traceId);
+        logger.debug("TraceId: {}, Inventory added to DB.", traceId);
     }
 }
