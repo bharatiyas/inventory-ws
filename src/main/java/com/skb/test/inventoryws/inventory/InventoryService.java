@@ -8,7 +8,6 @@ import com.skb.test.inventoryws.manufacturer.ManufacturerEntity;
 import com.skb.test.inventoryws.manufacturer.ManufacturerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * This class acts as an abstraction layer between the Controller and Datasource.
+ * It performs the necessary orchestration needed for the managing the Inventory Entity.
+ */
 @Service
 public class InventoryService {
 
@@ -32,6 +35,14 @@ public class InventoryService {
         this.inventoryConverter = inventoryConverter;
     }
 
+    /**
+     * Fetches a list available inventory entities in the system. Returns a page of inventory entities based on the
+     * supplied skip and limit parameters.
+     * @param skip - Number of records to skip for pagination
+     * @param limit - Maximum number of records to return
+     * @param traceId
+     * @return
+     */
     public List<InventoryItem> getAllInventory(Integer skip, Integer limit, String traceId) {
         Pageable pageable = PageRequest.of(skip, limit);
 
@@ -44,6 +55,13 @@ public class InventoryService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Fetches an inventory item from the Datasource by InventoryId
+     * @param inventoryId
+     * @param traceId
+     * @return
+     * @throws InventoryNotFoundException
+     */
     public InventoryItem getInventory(String inventoryId, String traceId) throws InventoryNotFoundException {
 
         Optional<InventoryEntity> inventoryEntity = inventoryRepository.findByInventoryId(inventoryId);
@@ -55,6 +73,15 @@ public class InventoryService {
         }
     }
 
+    /**
+     * Adds an Inventory item to the Datasource. If a Manufacturer with matching details does not exist in the system,
+     * it creates one. If a Manufacturer exists with matching details then uses the existing Manufacturer entity.
+     * Otherwise, if a Manufacturer with same name exits, but other details do not match then it throws an error
+     * alerting the consumer that the supplied details need to be rectified.
+     * @param inventoryItemToBeAdded
+     * @param traceId
+     * @throws InventoryAlreadyExistException
+     */
     public void addInventoryItem(InventoryItem inventoryItemToBeAdded, String traceId)
             throws InventoryAlreadyExistException {
 

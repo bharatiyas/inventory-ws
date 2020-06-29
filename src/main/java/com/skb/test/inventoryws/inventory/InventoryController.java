@@ -14,6 +14,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Controller to handle requests for Inventory API
+ */
 @RestController
 @RequestMapping("/inventory")
 public class InventoryController {
@@ -26,6 +29,14 @@ public class InventoryController {
         this.inventoryService = inventoryService;
     }
 
+    /**
+     * Handle Get All Inventory API requests. List available inventory in the system.
+     * Accepts skips and limit as Query Params
+     * @param skip - Number of records to skip for pagination
+     * @param limit - Maximum number of records to return
+     * @param traceId
+     * @return
+     */
     @GetMapping
     public ResponseEntity<List<InventoryItem>> getAllfindByNameContaining(@RequestParam(defaultValue = "0") Integer skip,
                                                                @RequestParam(defaultValue = "10") Integer limit,
@@ -41,6 +52,14 @@ public class InventoryController {
         return new ResponseEntity<>(inventoryService.getAllInventory(skip, limit, traceId), HttpStatus.OK);
     }
 
+    /**
+     * Handles the API request to return an inventory item by id.
+     * @param id - Id of the Inventory item to be returned
+     * @param traceId
+     * @return
+     * @throws InventoryNotFoundException
+     * @throws InventoryBadRequestException
+     */
     @GetMapping(path = "/{id}")
     public ResponseEntity<InventoryItem> getInventory(@PathVariable String id,
                                           @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
@@ -59,6 +78,13 @@ public class InventoryController {
         return new ResponseEntity<>(inventoryService.getInventory(id.trim(), traceId), HttpStatus.OK);
     }
 
+    /**
+     * Handles the API request to add an item to the Inventory system. Accpets a JSON object of type InventoryItem
+     * @param inventoryItem - Inventory Item details
+     * @param traceId
+     * @return
+     * @throws InventoryAlreadyExistException
+     */
     @PostMapping
     public ResponseEntity<InventoryItem> addInventory(@Valid @RequestBody InventoryItem inventoryItem,
                                           @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
