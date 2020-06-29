@@ -137,8 +137,8 @@ public class InventoryServiceTest {
         when(manufacturerRepository.findByName(anyString()))
                 .thenReturn(InventoryWsTestUtil.createManufacturerEntityOptional());
 
-        when(inventoryRepository.findByNameAndManufacturerEntity(anyString(), any(ManufacturerEntity.class)))
-                .thenReturn(InventoryWsTestUtil.createInventoryEntityOptional());
+        /*when(inventoryRepository.findByNameAndManufacturerEntity(anyString(), any(ManufacturerEntity.class)))
+                .thenReturn(InventoryWsTestUtil.createInventoryEntityOptional());*/
 
         InventoryItem inventoryItem = InventoryWsTestUtil.createInventoryItem();
         inventoryService.addInventoryItem(inventoryItem, TestConstants.API_TRACE_ID);
