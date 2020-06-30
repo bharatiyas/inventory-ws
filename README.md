@@ -37,3 +37,5 @@ Implementation for Inventory API.
         a. inventory.ws.user.creds.password=<password-of-your-choice>
         b. spring.profiles.active=dev
     
+## Invoking APIs
+Import the Postman collection and environment from src/main/resources/postman and execute the requests    
