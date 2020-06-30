@@ -22,6 +22,8 @@ public class InventoryEntity {
     public InventoryEntity() {
     }
 
+    // Assumed Many-to-One relationship between Manufacturer and Inventory because one Manufacturer can manufacture
+    // many products
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     @JoinColumn(name = "manufacturer_id",

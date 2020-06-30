@@ -86,26 +86,41 @@ public class InventoryService {
             throws InventoryAlreadyExistException {
 
         logger.debug("TraceId: {}, Request to add Inventory to DB: {}", traceId, inventoryItemToBeAdded);
+
+        // Convent InventoryItem to Inventory Entity object
         InventoryEntity inventoryEntity = inventoryConverter.convertModelToEntity(inventoryItemToBeAdded);
 
-        // Get the parent of the Book (Publisher is the parent). If not found throw an exception
+        // Check if we already have a Manufacturer with the same name
         Manufacturer manufacturer = inventoryItemToBeAdded.getManufacturer();
         Optional<ManufacturerEntity> me = manufacturerRepository
                 .findByName(manufacturer.getName());
 
         if(me.isPresent()) {
+            // Found Manufacturer with the same name
+
+            // Check if the details in the DB match with the ones supplied
             if(!me.get().getPhone().equals(manufacturer.getPhone()) ||
                     !me.get().getHomePage().equals(manufacturer.getHomePage())) {
+                // Probably there is a an error in the Manufacturer details of the request
                 throw new InventoryAlreadyExistException(traceId, "Manufacturer with same name but different phone/homePage found. Please verify manufacturer details.");
             }
+
+            // Check if the inventory with the same name and from same Manufacturer is present in the DB already
             Optional<InventoryEntity> ie =
                     inventoryRepository.findByNameAndManufacturerEntity(inventoryItemToBeAdded.getName(), me.get());
             if(ie.isPresent()) {
+                // Duplicate insertion being tried. Request is denied!
                 throw new InventoryAlreadyExistException(traceId, "Inventory with same name and same manufacturer already exists");
             }
+
+            // Inventory with the same name and from same Manufacturer is not found. All good to go.
             inventoryEntity.setManufacturerEntity(me.get());
         }
+
+        // All checks done. Now persist the record in the DB
         inventoryRepository.save(inventoryEntity);
+
+        // Set the Id in the InventoryItem object
         inventoryItemToBeAdded.setId(inventoryEntity.getInventoryId());
         logger.debug("TraceId: {}, Inventory added to DB.", traceId);
     }
