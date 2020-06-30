@@ -6,7 +6,6 @@ import java.util.UUID;
 public class TestConstants {
 
     // Base URL
-    public static final String API_BASE_URL = "http://localhost:";
     public static final String INVENTORY_URI = "/inventory";
     public static final String API_TRACE_ID = "Test-Trace-Id";
 
@@ -20,9 +19,8 @@ public class TestConstants {
     public static final String TEST_INVENTORY_ID = UUID.randomUUID().toString();
     public static final String TEST_INVENTORY_NAME = "TestInventoryName";
     public static final LocalDateTime TEST_RELEASEDATE = LocalDateTime.now();
-    public static final String TEST_INVENTORY_PHONE = "112-233-455";
 
     // Login credentials
-    public static final String LOGIN_USERNAME = "sysuser";
-    public static final String LOGIN_PASSWORD = "syssecret";
+    public static final String LOGIN_USERNAME = "testuser";
+    public static final String LOGIN_PASSWORD = "testpassword";
 }

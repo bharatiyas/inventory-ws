@@ -19,7 +19,7 @@
         </root>
     </springProfile>
 
-    <springProfile name="default">
+    <springProfile name="dev">
 
         <appender name="CONSOLE"
                   class="ch.qos.logback.core.ConsoleAppender">
@@ -52,6 +52,9 @@
         <logger name="com.skb" level="DEBUG"/>
         <root level="ERROR">
             <appender-ref ref="FILE-ROLLING"/>
+        </root>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
